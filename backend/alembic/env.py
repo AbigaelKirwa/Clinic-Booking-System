@@ -20,6 +20,9 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from app.db.base import Base
 from app.models.doctor import Doctor
+from app.models.patient import Patient
+from app.models.availability import Availability
+from app.models.appointment import Appointment
 from app.core.config import settings
 
 target_metadata = Base.metadata
