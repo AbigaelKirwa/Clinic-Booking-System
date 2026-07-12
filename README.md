@@ -6,7 +6,7 @@
 
 This project implements a RESTful appointment booking system for a small clinic with five doctors. Patients can view available appointment slots for a doctor, book appointments, cancel existing appointments, and reschedule appointments.
 
-The system is intentionally designed with scalability in mind. Although the current requirements assume only five doctors and 30-minute appointment slots, the architecture allows additional doctors, authentication, notifications, and more advanced scheduling rules to be added with minimal changes.
+The system is intentionally designed with scalability in mind. Although the current requirements assume only five doctors and varying appointment slots, the architecture allows additional doctors, authentication, notifications, and more advanced scheduling rules to be added with minimal changes.
 
 ---
 
