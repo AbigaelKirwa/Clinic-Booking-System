@@ -33,12 +33,14 @@ class Doctor(Base):
 
     email: Mapped[str] = mapped_column(
         String(60),
-        nullable=False
+        nullable=False,
+        unique=True
     )
 
     phone: Mapped[str] = mapped_column(
         String(13),
-        nullable=False
+        nullable=False, 
+        unique=True
     )
 
     created_at: Mapped[datetime] = mapped_column(

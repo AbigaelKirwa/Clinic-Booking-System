@@ -17,7 +17,7 @@ def create_patient(db: Session, patient_data: PatientCreate) -> Patient:
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise DuplicatePatientError("A patient with this phone number already exists")
+        raise DuplicatePatientError("A patient with this email/phone number already exists")
 
     db.refresh(patient)
     return patient
