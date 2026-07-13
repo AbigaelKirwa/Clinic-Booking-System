@@ -4,6 +4,7 @@ sqlalchemy
 psycopg
 alembic
 pydantic
+pydantic_settings
 pytest
 httpx
 httpx2
