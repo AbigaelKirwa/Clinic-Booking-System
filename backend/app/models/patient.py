@@ -33,7 +33,8 @@ class Patient(Base):
 
     phone: Mapped[str] = mapped_column(
         String(13),
-        nullable=False
+        nullable=False,
+        unique=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(
