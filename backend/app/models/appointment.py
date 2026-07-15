@@ -1,7 +1,7 @@
 import enum
 from datetime import date, datetime, time
 
-from sqlalchemy import Date, DateTime, ForeignKey, Index, Time, func, text
+from sqlalchemy import Date, DateTime, ForeignKey, Index, String, Time, func, text
 from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
@@ -55,6 +55,11 @@ class Appointment(Base):
             values_callable=lambda statuses: [status.value for status in statuses],
         ),
         nullable=False,
+    )
+
+    cancellation_reason: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

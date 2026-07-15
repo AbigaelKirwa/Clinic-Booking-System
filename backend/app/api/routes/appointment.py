@@ -2,10 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.schemas.appointment import AppointmentCreate, AppointmentResponse
+from app.schemas.appointment import (
+    AppointmentCancel,
+    AppointmentCreate,
+    AppointmentResponse,
+)
 from app.services.appointment_service import (
+    AppointmentNotFoundError,
     AppointmentValidationError,
     DuplicateEntryError,
+    cancel_appointment as cancel_appointment_service,
     create_appointment as create_appointment_service,
 )
 
@@ -27,5 +33,29 @@ def create_appointment(appointment_data: AppointmentCreate, db: Session = Depend
     except DuplicateEntryError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        ) from exc
+
+
+@router.patch(
+    "/{appointment_id}/cancel",
+    response_model=AppointmentResponse,
+    status_code=status.HTTP_200_OK,
+)
+def cancel_appointment(
+    appointment_id: int,
+    cancel_data: AppointmentCancel,
+    db: Session = Depends(get_db),
+):
+    try:
+        return cancel_appointment_service(db, appointment_id, cancel_data)
+    except AppointmentNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except AppointmentValidationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(exc),
         ) from exc
