@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict
+from datetime import time, date
 
 class DoctorCreate(BaseModel):
     first_name: str
@@ -7,6 +8,9 @@ class DoctorCreate(BaseModel):
     email: str
     phone: str
     specialty: str | None
+    start_time: time
+    end_time: time
+    available: bool
 
 class DoctorResponse(BaseModel):
     id: int
@@ -16,5 +20,17 @@ class DoctorResponse(BaseModel):
     email: str
     phone: str
     specialty: str | None
+    start_time: time
+    end_time: time
+    available: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+class TimeSlot(BaseModel):
+    start_time: time
+    end_time: time
+
+class DoctorAvailabilityResponse(BaseModel):
+    doctor_id: int
+    date: date
+    slots: list[TimeSlot]

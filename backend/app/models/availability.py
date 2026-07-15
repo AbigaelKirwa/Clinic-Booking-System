@@ -14,7 +14,8 @@ class Availability(Base):
     doctor_id: Mapped[int] = mapped_column(
         ForeignKey("doctor.id"),
         nullable=False,
-        index=True
+        index=True,
+        unique=True
     )
 
     start_time: Mapped[time] = mapped_column(
