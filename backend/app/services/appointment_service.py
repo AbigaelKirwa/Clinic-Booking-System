@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.appointment import Appointment, AppointmentStatus
 from app.models.doctor import Doctor
 from app.models.patient import Patient
-from app.schemas.appointment import AppointmentCreate
+from app.schemas.appointment import AppointmentCancel, AppointmentCreate
 from app.services.slot_utils import is_valid_doctor_slot
 
 MIN_LEAD_TIME = timedelta(hours=1)
@@ -18,6 +18,10 @@ class DuplicateEntryError(Exception):
 
 class AppointmentValidationError(Exception):
     """Raised when booking rules are not satisfied."""
+
+
+class AppointmentNotFoundError(Exception):
+    """Raised when an appointment does not exist."""
 
 
 def create_appointment(db: Session, appointment_data: AppointmentCreate) -> Appointment:
@@ -82,5 +86,27 @@ def create_appointment(db: Session, appointment_data: AppointmentCreate) -> Appo
         db.rollback()
         raise DuplicateEntryError("An appointment for this slot has already been booked")
 
+    db.refresh(appointment)
+    return appointment
+
+
+def cancel_appointment(
+    db: Session,
+    appointment_id: int,
+    cancel_data: AppointmentCancel,
+) -> Appointment:
+    appointment = db.get(Appointment, appointment_id)
+    if appointment is None:
+        raise AppointmentNotFoundError(
+            f"Appointment with id {appointment_id} not found"
+        )
+
+    if appointment.status == AppointmentStatus.CANCELLED:
+        raise AppointmentValidationError("Appointment is already cancelled")
+
+    appointment.status = AppointmentStatus.CANCELLED
+    appointment.cancellation_reason = cancel_data.reason
+
+    db.commit()
     db.refresh(appointment)
     return appointment
