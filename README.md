@@ -15,10 +15,6 @@ The system is intentionally designed with scalability in mind. Although the curr
 The application follows a layered architecture to separate concerns.
 
 ```
-Frontend (React)
-
-        │
-
 REST API (FastAPI)
 
         │
@@ -36,7 +32,6 @@ PostgreSQL
 
 Each layer has a single responsibility:
 
-* **Frontend** presents information to users.
 * **API Layer** handles HTTP requests and responses.
 * **Service Layer** contains business rules such as booking validation and availability calculations.
 * **Repository Layer** manages database operations.

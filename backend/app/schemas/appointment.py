@@ -14,6 +14,12 @@ class AppointmentCancel(BaseModel):
     reason: str = Field(min_length=1, max_length=255)
 
 
+class AppointmentReschedule(BaseModel):
+    date: date
+    start_time: time
+    end_time: time
+
+
 class AppointmentResponse(BaseModel):
     id: int
     doctor_id: int
