@@ -9,6 +9,7 @@ class AppointmentCreate(BaseModel):
     end_time: time
 
 class AppointmentResponse(BaseModel):
+    id: int
     doctor_id: int
     patient_id: int
     date: date
