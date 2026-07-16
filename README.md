@@ -280,3 +280,47 @@ Advantages:
 * Simpler future expansion.
 
 This structure keeps HTTP handling independent from the application's booking logic.
+
+
+## Deployment & CI/CD
+
+**Public URL:** `https://client-booking-system.fastapicloud.dev`
+
+### Pipeline overview
+
+This project uses **GitHub Actions** for continuous integration.
+
+**On every pull request into `main`:**
+* Checks out the repository
+* Sets up Python 3.12
+* Installs backend dependencies from `requirements.txt`
+* Runs the backend test suite with `pytest`
+
+The workflow is defined in `.github/workflows/ci.yml`. A PR should only be merged after these checks pass.
+
+**Deployment branch:** `main`
+
+After a PR is merged into `main`, the application is deployed to **FastAPI Cloud** (the hosted production environment). Feature branches such as `feature/dev`, `feature/project-setup`, and `feature/database-setup` were used during development for setup and incremental work; they feed into `main` through pull requests rather than deploying on their own.
+
+---
+
+## AI usage reflection
+
+* **What AI was used for**
+  * Scaffolding and refining API routes, services, and Pydantic schemas (doctors, availability, appointments)
+  * Implementing booking rules (slot generation, validation, cancel, reschedule)
+  * Debugging deployment issues (missing `fastapi[standard]`, `DATABASE_URL` on Cloud)
+  * Tightening README / CI wording
+
+* **One place AI improved the work**
+  * **Prompt (paraphrased):** help implement `GET /doctors/{id}/availability` for 30-minute slots, then booking validation that only accepts those slots.
+  * **What improved:** shared `slot_utils` so availability and booking use the same slot rules, which avoided mismatched “free” vs “bookable” times (e.g. rejecting `08:10–08:40`).
+
+* **One place AI was wrong or incomplete**
+  * Early booking code paths / suggestions treated conflicts mainly as duplicates, but inserts were also failing because `status` was never set to `booked`.
+  * **How it was caught:** Cloud/local logs showed `status: None` on insert and 409 responses that were not true “slot already taken” cases; fixing status and validation clarified real conflicts vs bad payloads.
+
+* **Two decisions made without AI**
+  * **Soft cancellation** (keep the row, set status to `cancelled`) instead of deleting appointments — needed for history/audit and so cancelled slots become bookable again without losing records.
+  * **Layered architecture** (routes → services → models) — keeps HTTP concerns out of booking rules so validation and tests stay maintainable as features grow.
+
