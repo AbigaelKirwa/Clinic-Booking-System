@@ -307,7 +307,7 @@ After a PR is merged into `main`, the application is deployed to **FastAPI Cloud
 ## AI usage reflection
 
 * **What AI was used for**
-  * Scaffolding and refining API routes, services, and Pydantic schemas (doctors, availability, appointments)
+  * Refining API routes, services, and Pydantic schemas (doctors, availability, appointments)
   * Implementing booking rules (slot generation, validation, cancel, reschedule)
   * Debugging deployment issues (missing `fastapi[standard]`, `DATABASE_URL` on Cloud)
   * Tightening README / CI wording
